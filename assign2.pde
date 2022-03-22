@@ -131,9 +131,11 @@ void draw() {
     } else if (leftPressed) {
       image(groundhogLeft, groundhogX, groundhogY);
       if (groundhogX<0)groundhogX=0;
+       if (groundhogX+groundhogSize>width)groundhogX=width-groundhogSize;
     } else if (rightPressed) {
       image(groundhogRight, groundhogX, groundhogY);
       if (groundhogX+groundhogSize>width)groundhogX=width-groundhogSize;
+       if (groundhogX<0)groundhogX=0;
     } else {
       image(groundhogIdle, groundhogX, groundhogY);
     }
