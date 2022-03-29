@@ -229,6 +229,7 @@ void draw() {
         groundhogY=80;
         cabbageX=floor(random(0, 8))*80;
         cabbageY=160+floor(random(0, 4))*80;
+         soldierY=160+floor((random(160, 480))%4)*80;
         gameLife=LIFE_START;
         ;
         gameState = GAME_RUN;
