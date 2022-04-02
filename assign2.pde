@@ -44,6 +44,15 @@ boolean downPressed, rightPressed, leftPressed;
 float groundhogX, groundhogY;
 float groundhogSize=80;
 float groundhogSpeed=80;
+//framerate
+int animationRate;
+
+//gh state
+final int GH_UP=0;
+final int GH_DOWN=1;
+final int GH_LEFT=2;
+final int GH_RIGHT=3;
+int ghState=GH_UP;
 
 void setup() {
   size(640, 480, P2D);
@@ -125,19 +134,42 @@ void draw() {
     soldierX%=width;
 
     //groundhog walking
-    if (downPressed) {
-      image(groundhogDown, groundhogX, groundhogY);
-      if ( groundhogY+groundhogSize>height)groundhogY=height-groundhogSize;
-    } else if (leftPressed) {
-      image(groundhogLeft, groundhogX, groundhogY);
-      if (groundhogX<0)groundhogX=0;
-       if (groundhogX+groundhogSize>width)groundhogX=width-groundhogSize;
-    } else if (rightPressed) {
-      image(groundhogRight, groundhogX, groundhogY);
-      if (groundhogX+groundhogSize>width)groundhogX=width-groundhogSize;
-       if (groundhogX<0)groundhogX=0;
-    } else {
-      image(groundhogIdle, groundhogX, groundhogY);
+    
+if(animationRate<15){
+  animationRate++;
+
+    switch(ghState){
+      case GH_LEFT:
+          image(groundhogLeft, groundhogX, groundhogY);
+        groundhogX -= groundhogSpeed/15.0;
+        break;
+      case GH_RIGHT:
+         image(groundhogRight, groundhogX, groundhogY);
+        groundhogX += groundhogSpeed/15.0;
+        break;
+      case GH_DOWN:
+         image(groundhogDown, groundhogX, groundhogY);
+        groundhogY += groundhogSpeed/15.0;
+        break;
+    }
+   
+    if(animationRate == 15){
+      groundhogX = round(groundhogX);
+      groundhogY = round(groundhogY);
+    }
+  }else{
+    ghState=GH_UP;
+    image(groundhogIdle, groundhogX, groundhogY);
+  }
+  
+    if (groundhogX>560) { 
+      groundhogX-= 80/15.0;
+    }
+    if (groundhogX<0) {
+      groundhogX+= 80/15.0;
+    }
+    if (groundhogY>400) {
+      groundhogY-= 80/15.0;
     }
 
     //life time
@@ -243,34 +275,18 @@ void draw() {
 
 
 void keyPressed() {
-  if (key==CODED) {
+  if (ghState==GH_UP) {
+  animationRate=0;
     switch(keyCode) {
     case DOWN:
-      groundhogY+=groundhogSpeed;
-      downPressed=true;
+     ghState=GH_DOWN;
       break;
     case LEFT:
-      groundhogX-=groundhogSpeed;
-      leftPressed=true;
+    ghState=GH_LEFT;
       break;
     case RIGHT:
-      groundhogX+=groundhogSpeed;
-      rightPressed=true;
+      ghState=GH_RIGHT;
       break;
     }
-  }
-}
-
-void keyReleased() {
-  switch(keyCode) {
-  case DOWN:
-    downPressed=false;
-    break;
-  case LEFT:
-    leftPressed=false;
-    break;
-  case RIGHT:
-    rightPressed=false;
-    break;
   }
 }
